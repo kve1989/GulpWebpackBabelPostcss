@@ -1,0 +1,33 @@
+@import 'reset';
+@import 'global';
+
+:root {
+	--accent: #234d33;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+	background-color: steelblue;
+}
+
+.nav {
+	background-color: mediumseagreen;
+}
+
+.main {
+	background-color: rosybrown;
+	transition: all .2s;
+}
+
+.footer {
+	background-color: yellowgreen;
+}
+
+@media (width <= 320px) {
+	.main {
+		background-color: red;
+	}
+}
