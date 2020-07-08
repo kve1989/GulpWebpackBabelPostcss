@@ -58,7 +58,7 @@ img {
 	transition: opacity 0.3s;
 }
 
-/* Natural flow and rhythm in articles by default */
+/* все элементы в потоке, которые расположены после другого элемента, должны получить верхний отступ равный интерлиньяжу */
 article>*+* {
 	margin-top: 1em;
 }
