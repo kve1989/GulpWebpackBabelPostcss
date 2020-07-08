@@ -64,7 +64,15 @@ export const copy = () => {
 export const styles = () => {
     return gulp
 		.src(paths.styles.src)
-		.pipe(postcss([pimport, minmax, autoprefixer, csso, mqpacker]))
+		.pipe(
+			postcss([
+				pimport,
+				minmax,
+				autoprefixer({ grid: "autoplace" }),
+				csso,
+				mqpacker,
+			])
+		)
 		.pipe(replace(/\.\.\//g, ""))
 		.pipe(rename(paths.cssOutputName))
 		.pipe(gulp.dest(paths.styles.dest))
