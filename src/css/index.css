@@ -1,5 +1,5 @@
-@import 'reset';
-@import 'global';
+@import 'core/reset';
+@import 'core/global';
 
 :root {
 	--accent: #234d33;
