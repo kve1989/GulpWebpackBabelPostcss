@@ -1,68 +1,67 @@
-import gulp from 'gulp';
-import browserSync from 'browser-sync';
-import webpack from 'webpack-stream';
-import postcss from 'gulp-postcss';
-import replace from 'gulp-replace';
-import rename from 'gulp-rename';
-import pimport from 'postcss-import';
-import minmax from 'postcss-media-minmax';
-import autoprefixer from 'autoprefixer';
-import csso from 'postcss-csso';
+import gulp from "gulp";
+import browserSync from "browser-sync";
+import webpack from "webpack-stream";
+import postcss from "gulp-postcss";
+import replace from "gulp-replace";
+import rename from "gulp-rename";
+import pimport from "postcss-import";
+import minmax from "postcss-media-minmax";
+import autoprefixer from "autoprefixer";
+import csso from "postcss-csso";
 import mqpacker from "css-mqpacker";
 
-let src = 'src',
-	dist = 'dist';
+let src = "src",
+	dist = "dist";
 
 let paths = {
 	scripts: {
-		src: src + '/js/index.js',
-		dest: dist + '/js',
+		src: src + "/js/index.js",
+		dest: dist + "/js",
 	},
 
 	styles: {
-		src: src + '/css/index.css',
-		dest: dist + '/css',
+		src: src + "/css/index.css",
+		dest: dist + "/css",
 	},
 
 	fonts: {
-		src: src + '/' + 'fonts/**/*',
+		src: src + "/" + "fonts/**/*",
 	},
 
 	images: {
-		src: src + '/' + 'images/**/*',
+		src: src + "/" + "images/**/*",
 	},
 
-	cssOutputName: 'main.css',
-	jsOutputName: 'main.js',
+	cssOutputName: "main.css",
+	jsOutputName: "main.js",
 };
 
 /* browsersync */
 export const browsersync = () => {
 	browserSync.init({
-		server: { baseDir: dist + '/' },
+		server: { baseDir: dist + "/" },
 		notify: false,
-		ui: false
+		ui: false,
 	});
 };
 
 /* copy */
 export const copy = () => {
-    return gulp.src([
-			paths.fonts.src,
-			paths.images.src,
-			src + '/*.html'
-        ], {
-            base: src
-        })
-        .pipe(gulp.dest(dist))
-        .pipe(browserSync.stream({
-            once: true
-        }));
+	return gulp
+		.src([paths.fonts.src, paths.images.src, src + "/*.html"], {
+			base: src,
+		})
+		.pipe(gulp.dest(dist))
+		.pipe(
+			browserSync.stream({
+				once: true,
+			})
+		);
 };
 
 /* styles */
 export const styles = () => {
-    return gulp
+	return gulp
 		.src(paths.styles.src)
 		.pipe(
 			postcss([
@@ -81,42 +80,49 @@ export const styles = () => {
 
 /* scripts */
 export const scripts = () => {
-	return gulp.src(paths.scripts.src)
-	.pipe(webpack({
-		mode: 'production',
-		output: {
-			filename: paths.jsOutputName
-		},
-		watch: false,
-		devtool: 'source-map',
-		module: {
-			rules: [
-				{
-					test: /\.m?js$/,
-					exclude: /(node_modules|bower_components)/,
-					use: {
-						loader: 'babel-loader',
-						options: {
-							presets: [['@babel/preset-env', {
-								debug: true,
-								corejs: 3,
-								useBuiltIns: 'usage'
-							}]]
-						}
-					}
-				}
-			]
-		}
-	}))
-	.pipe(gulp.dest(paths.scripts.dest))
-	.pipe(browserSync.stream())
+	return gulp
+		.src(paths.scripts.src)
+		.pipe(
+			webpack({
+				mode: "production",
+				module: {
+					rules: [
+						{
+							test: /\.m?js$/,
+							exclude: /(node_modules|bower_components)/,
+							use: {
+								loader: "babel-loader",
+								options: {
+									presets: [
+										[
+											"@babel/preset-env",
+											{
+												debug: true,
+												corejs: 3,
+												useBuiltIns: "usage",
+											},
+										],
+									],
+								},
+							},
+						},
+					],
+				},
+			})
+		)
+		.pipe(gulp.dest(paths.scripts.dest))
+		.pipe(browserSync.stream());
 };
 
 /* watch */
 export const watch = () => {
-	gulp.watch(src + '/**/*', styles);
-	gulp.watch(src + '/**/*.js', scripts);
-	gulp.watch([paths.fonts.src, paths.images.src, src + '/*.html'], gulp.series(copy));
+	gulp.watch(src + "/**/*", { usePolling: true }, styles);
+	gulp.watch(src + "/**/*.js", { usePolling: true }, scripts);
+	gulp.watch(
+		[paths.fonts.src, paths.images.src, src + "/*.html"],
+		{ usePolling: true },
+		gulp.series(copy)
+	);
 };
 
 export default gulp.series(
