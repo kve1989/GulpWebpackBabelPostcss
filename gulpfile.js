@@ -67,7 +67,10 @@ export const styles = () => {
 			postcss([
 				pimport,
 				minmax,
-				autoprefixer({ grid: "autoplace" }),
+				autoprefixer({
+					overrideBrowserslist: ["last 10 versions"],
+					grid: true,
+				}),
 				csso,
 				mqpacker,
 			])
